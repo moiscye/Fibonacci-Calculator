@@ -1,0 +1,50 @@
+version: "3"
+services:
+  postgres:
+    image: "postgres:latest"
+  redis:
+    image: "redis:latest"
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "4001:80"
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      # specify teh folder or context
+      context: ./server
+    volumes:
+      # avoid overriding the node_modules folder
+      - /app/node_modules
+      # copy everything in /server folder  to /app folder
+      # except the node_modules folder set to be avoided in the prior instruction
+      - ./server:/app
+    environment:
+      # the name given in the above service
+      - REDIS_HOST= redis
+      # the default port of redis. see doc for more info
+      - REDIS_PORT= 6379
+      # the folling is the default config for postgres
+      # check doc for further info
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app

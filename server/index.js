@@ -4,7 +4,7 @@ const keys = require("./keys");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const PORT = process.env.PORT || 7999;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -26,7 +26,7 @@ pgClient.on("error", () => console.log("Lost PG connection"));
 
 pgClient
   .query("CREATE TABLE IF NOT EXISTS values (number INT)")
-  .catch(err => console.log("err"));
+  .catch(err => console.log(err));
 
 //Redis Client Setup
 const redis = require("redis");
@@ -46,9 +46,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/values/all", async (req, res) => {
-  //
   const values = await pgClient.query("SELECT * from values");
-  res.send(values.rows);
   res.send(values.rows);
 });
 
@@ -70,6 +68,6 @@ app.post("/values", async (req, res) => {
   pgClient.query("INSERT INTO values(number) VALUES($1)", [index]);
 
   res.send({ working: true });
-
-  app.listen(PORT, err => console.log(`Listening in port ${PORT}`));
 });
+
+app.listen(PORT, err => console.log(`Listening in port ${PORT}`));
