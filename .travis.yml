@@ -29,3 +29,17 @@ after_success:
   - docker push moiscye/multi-nginx
   - docker push moiscye/multi-server
   - docker push moiscye/multi-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-southeast-2"
+  app: "multi-docker"
+  env: "MultiDocker-env"
+  bucket_name: "elasticbeanstalk-ap-southeast-2-508651004710"
+  bucket_path: "multi-docker"
+  on:
+    branch: master
+  access_key_id:
+    secure: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
