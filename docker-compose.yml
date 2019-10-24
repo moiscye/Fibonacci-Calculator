@@ -21,7 +21,7 @@ services:
       - /app/node_modules
       # copy everything in /server folder  to /app folder
       # except the node_modules folder set to be avoided in the prior instruction
-      - ./server:/app
+      - .//server:/app
     environment:
       # the name given in the above service
       - REDIS_HOST= redis
@@ -42,14 +42,14 @@ services:
       context: ./client
     volumes:
       - /app/node_modules
-      - ./client:/app
+      - .//client:/app
   worker:
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
     volumes:
       - /app/node_modules
-      - ./worker:/app
+      - .//worker:/app
     environment:
       # the name given in the above service
       - REDIS_HOST= redis
