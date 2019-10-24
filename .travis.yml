@@ -1,0 +1,31 @@
+#sudo permissions for installing docker
+sudo: required
+
+#installing docker
+services:
+  - docker
+
+#this instruction happens before installing
+before_install:
+  # bulding our dev dockerfile. Important to add relative path ./client
+  - docker build -t moiscye/react-test -f ./client/Dockerfile.dev ./client
+
+  #telling travis to run our test. CI-true needed to end the test after finish it
+script:
+  - docker run -e CI=true moiscye/react-test npm run test
+  # this happens after all tests passed.
+after_success:
+  # building all production containers
+  - docker build -t moiscye/multi-client ./client
+  - docker build -t moiscye/multi-nginx ./nginx
+  - docker build -t moiscye/multi-server ./server
+  - docker build -t moiscye/multi-worker ./worker
+
+  # log in into docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # pushing all container to docker hub
+  - docker push moiscye/multi-client
+  - docker push moiscye/multi-nginx
+  - docker push moiscye/multi-server
+  - docker push moiscye/multi-worker
