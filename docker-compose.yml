@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
-      - "4001:80"
+      - "3050:80"
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -24,9 +24,9 @@ services:
       - .//server:/app
     environment:
       # the name given in the above service
-      - REDIS_HOST= redis
+      - REDIS_HOST=redis
       # the default port of redis. see doc for more info
-      - REDIS_PORT= 6379
+      - REDIS_PORT=6379
       # the folling is the default config for postgres
       # check doc for further info
       - PGUSER=postgres
@@ -52,6 +52,6 @@ services:
       - .//worker:/app
     environment:
       # the name given in the above service
-      - REDIS_HOST= redis
+      - REDIS_HOST=redis
       # the default port of redis. see doc for more info
-      - REDIS_PORT= 6379
+      - REDIS_PORT=6379

@@ -97,14 +97,14 @@ class Fib extends Component {
       seenIndexes: seenIndexes.data
     });
   }
-
   handleSubmit = async event => {
     event.preventDefault();
-
     await axios.post("/api/values", {
       index: this.state.index
     });
     this.setState({ index: "" });
+    this.fetchValues();
+    this.fetchIndexes();
   };
 
   renderSeenIndexes() {
